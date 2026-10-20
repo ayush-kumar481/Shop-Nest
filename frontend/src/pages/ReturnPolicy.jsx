@@ -1,0 +1,24 @@
+import React from "react";
+
+const ReturnPolicy = () => (
+  <main className="policy-page">
+    <header className="policy-header">
+      <p className="policy-eyebrow">ShopNest information</p>
+      <h1>Return &amp; Refund Policy</h1>
+      <p>Helpful details about returning an order and receiving a refund.</p>
+    </header>
+    <div className="policy-content">
+      <p className="policy-lead">
+        At ShopNest, we proudly stand behind the quality of our merchandise. If
+        for any reason you are completely disastified with your purchase, you
+        may securely initiate a return within 30 days of receiving your order.
+      </p>
+      <section><h2>1. Eligibility for Returns</h2><p>To be eligible for a return, the item must be completely unused, housed in the same absolute condition that it was received, and maintained within its original factory packaging. Receipts or proof of purchase mappings are strictly required.</p></section>
+      <section><h2>2. Refund Processing</h2><p>Once your return is physically received and internally inspected, an immediate email protocol will fire notifying you of the approval status. Approved refunds will cleanly propagate to your original designated Razorpay gateway endpoint within 5-7 business working days naturally.</p></section>
+      <section><h2>3. Exempted Output Goods</h2><p>Certain explicit categories such as perishable items, custom software, digital media, or physically tampered items are heavily restricted and do not qualify for any standard refund sequence.</p></section>
+      <section><h2>4. Shipping Transit Costs</h2><p>You will actively remain strictly responsible for covering your own outbound logistical shipping rates associated with returning the item. Restocking fees may conditionally apply.</p></section>
+    </div>
+  </main>
+);
+
+export default ReturnPolicy;
