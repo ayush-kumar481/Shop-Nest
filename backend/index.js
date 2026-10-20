@@ -12,10 +12,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.send("Backend Working");
-});
-
 app.use("/api/auth", require("./routes/authRoutes.js"));
 app.use("/api/products", require("./routes/productRoutes.js"));
 app.use("/api/orders", require("./routes/orderRoutes.js"));
@@ -27,6 +23,10 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static(frontendBuildPath));
   app.get(/.*/, (req, res) => {
     res.sendFile(path.join(frontendBuildPath, "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("Backend Working");
   });
 }
 
