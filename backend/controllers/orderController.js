@@ -16,21 +16,13 @@ const addOrderItems = async (req, res) => {
       });
       const createdOrder = await order.save();
 
-      // Send Order Confirmation Email
-      const message = `
-        <h2>Order Confirmation</h2>
-        <p>Hello ${req.user.name},</p>
-        <p>Your order has been successfully placed! Order ID: <strong>${createdOrder._id}</strong></p>
-        <p>Total Amount Paid: $${totalAmount.toFixed(2)}</p>
-        <p>It will be shipped to: ${address.street}, ${address.city}</p>
-        <p>Thank you for shopping with ShopNest!</p>
-      `;
-
-      await sendEmail({
-        email: req.user.email,
-        subject: "ShopNest - Order Confirmation",
+      // Email is best effort and should not delay the order response.
+      const message = `Hello ${req.user.name}, your ShopNest order ${createdOrder._id} has been placed. Total: ₹${totalAmount.toFixed(2)}. Shipping to: ${address.street}, ${address.city}.`;
+      void sendEmail(
+        req.user.email,
+        "ShopNest - Order Confirmation",
         message,
-      });
+      ).catch((error) => console.error("Order confirmation email failed:", error));
 
       res.status(201).json(createdOrder);
     }

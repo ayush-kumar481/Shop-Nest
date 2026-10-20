@@ -1,6 +1,11 @@
 const nodeMailer = require("nodemailer");
 
 const sendEmail = async (to, subject, text) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.log("Skipping email: EMAIL_USER and EMAIL_PASS are not configured.");
+    return;
+  }
+
   try {
     const transporter = nodeMailer.createTransport({
       service: "Gmail",
@@ -17,7 +22,7 @@ const sendEmail = async (to, subject, text) => {
     };
     await transporter.sendMail(mailOptions);
   } catch (error) {
-    console.error("Error sending Email");
+    console.error("Error sending Email:", error.message);
   }
 };
 

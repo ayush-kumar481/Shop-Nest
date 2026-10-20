@@ -18,6 +18,8 @@ const Checkout = () => {
     postCode: "",
     country: "",
   });
+  const [paymentError, setPaymentError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + item.price * item.qty,
@@ -25,24 +27,26 @@ const Checkout = () => {
   );
 
   const handlePayment = async () => {
+    setPaymentError("");
+    setIsSubmitting(true);
     try {
       const orderRes = await fetch(apiUrl("/api/payment/order"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: totalPrice }),
       });
-      const orderData = await orderRes.json();
+      const orderData = await orderRes.json().catch(() => ({}));
 
       if (!orderRes.ok) {
-        // Razorpay unconfigured exception handler
-        const fallback = window.confirm(
-          "Razorpay keys unconfigured on backend. Use Student Bypass Mode to place test order?",
-        );
-        if (fallback) {
-          return bypassPayment();
+        if (orderRes.status === 503) {
+          const fallback = window.confirm(
+            "Razorpay is not configured on this demo. Use Student Bypass Mode to place a test order?",
+          );
+          if (fallback) await bypassPayment();
         } else {
-          return alert("Payment failed to initialize");
+          throw new Error(orderData.message || "Payment failed to initialize.");
         }
+        return;
       }
 
       const options = {
@@ -77,10 +81,12 @@ const Checkout = () => {
               dispatch(clearCart());
               navigate("/ordersuccess");
             } else {
-              alert("Order saving failed");
+              const errorData = await saveOrderRes.json().catch(() => ({}));
+              setPaymentError(errorData.message || "Order saving failed.");
             }
           } else {
-            alert("Payment verification failed");
+            const errorData = await verifyRes.json().catch(() => ({}));
+            setPaymentError(errorData.message || "Payment verification failed.");
           }
         },
         prefill: {
@@ -96,6 +102,9 @@ const Checkout = () => {
       rzp1.open();
     } catch (error) {
       console.error(error);
+      setPaymentError(error.message || "Unable to complete checkout. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -113,9 +122,12 @@ const Checkout = () => {
         paymentId: "bypass_txn_" + Date.now(),
       }),
     });
+    const orderData = await saveOrderRes.json().catch(() => ({}));
     if (saveOrderRes.ok) {
       dispatch(clearCart());
       navigate("/ordersuccess");
+    } else {
+      throw new Error(orderData.message || `Test order could not be saved (${saveOrderRes.status}).`);
     }
   };
 
@@ -178,8 +190,9 @@ const Checkout = () => {
           />
           <div className="checkout-summary">
             <h4>Total to Pay: ₹{totalPrice.toFixed(2)}</h4>
-            <button type="submit" className="btn">
-              Pay Now
+            {paymentError && <p role="alert" className="checkout-error">{paymentError}</p>}
+            <button type="submit" className="btn" disabled={isSubmitting}>
+              {isSubmitting ? "Processing…" : "Pay Now"}
             </button>
           </div>
         </form>
