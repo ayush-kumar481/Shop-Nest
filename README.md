@@ -1,95 +1,53 @@
 <div align="center">
-  <img src="frontend/public/ShopNestLogo.png" alt="ShopNest logo" width="80" />
-  <h1>ShopNest · Full-Stack E-Commerce</h1>
-  <p>A full-stack online store with a React storefront, an Express API, and MongoDB.</p>
+  <img src="./frontend/public/ShopNestLogo.png" alt="ShopNest Logo" width="80" />
+  <h1>ShopNest - Full-Stack MERN E-Commerce App</h1>
+  <p>A professionally engineered, full-stack E-commerce platform built strictly using modern standard React (CRA) on the frontend and Express/MongoDB on the backend.</p>
 </div>
 
 ---
 
-## ✨ Features
+## 🛠 Tech Stack Details
 
-- Browse and search the product catalog
-- Add products to a persistent shopping cart and place orders
-- Customer accounts, profiles, and order history
-- Admin tools for products, orders, users, and store metrics
-- Cloudinary product image uploads
-- Razorpay checkout integration when payment credentials are configured
+- **Frontend:** Pure React.js (`react-scripts`), Redux Toolkit (for Cart state management), AuthContext API (for JWT user sessions).
+- **Backend:** Node.js, Express.js architecture mapped with middleware-based routing.
+- **Database:** MongoDB (via Mongoose schemas).
+- **Features:** Unified Admin Dashboard, Direct Cloudinary Content Maps, Personal User Profiles matching mapped Order Histories.
+- **Payments:** Razorpay fully implemented (utilize your test metrics or placeholder).
+- **Cloud Storage:** Cloudinary integration for Product image uploading securely via Multer.
 
-## 🛠 Tech Stack
+---
 
-- **Frontend:** React (Create React App), React Router, Redux Toolkit
-- **Backend:** Node.js, Express, Mongoose
-- **Database:** MongoDB
-- **Images:** Cloudinary
-- **Payments:** Razorpay
+## 🚀 Quick Start / Local Development Guide
 
-## 🚀 Local Development
+The workspace is configured beautifully using a monorepo-friendly setup with `concurrently`, enabling you to start everything from the very root folder.
 
-### Requirements
+### 1️⃣ Dependencies & Environments
+Make sure you have MongoDB running locally, or map it to a remote database string.
 
-- Node.js and npm
-- A MongoDB database (local or hosted)
-
-### Install and configure
-
-From the project root, install dependencies:
-
-```bash
-npm install
+Inside the `backend/` folder, ensure your `.env` looks like this:
+```env
+PORT=5000
+NODE_ENV=development
+MONGO_URI=mongodb://127.0.0.1:27017/shopnest
+JWT_SECRET=super_secret_key
+RAZORPAY_KEY_ID=your_key_id
+RAZORPAY_KEY_SECRET=your_key_secret
 ```
 
-The root install script installs the backend and frontend dependencies as well. Copy `backend/.env.example` to `backend/.env`, then set the credentials you need:
-
-| Variable | Purpose |
-| --- | --- |
-| `MONGO_URI` | MongoDB connection string (required) |
-| `JWT_SECRET` | Secret used to sign login tokens (required) |
-| `EMAIL_USER`, `EMAIL_PASS` | Gmail credentials for registration email |
-| `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | Product image uploads |
-| `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET` | Razorpay payments |
-| `PORT` | Backend port; defaults to `5000` locally |
-
-Start both apps from the project root:
-
-```bash
-npm run dev
-```
-
-The React development server runs on port `3000` and proxies `/api` requests to the backend on port `5000`. To create a production frontend build locally, run:
-
+From the **root folder** `shopnest/`, trigger a full install across environments:
 ```bash
 npm run build
 ```
 
-### Optional demo data
-
-With a working `MONGO_URI`, seed sample products, demo accounts, and orders:
-
+### 2️⃣ Populate the Database (Seeding)
+Test the platform rapidly featuring beautiful dummy products (Unsplash) and automatic `Admin` role provisioning:
 ```bash
-cd backend
 npm run seed
 ```
+> **Seed Admin Access:** Email: `admin@shopnest.com` | Password: `password123`
 
-The seed script creates a demo admin (`admin@shopnest.com`) and customer (`demo@shopnest.com`) with the password `password123`. These credentials are for local demos only; do not use them for a public production database.
-
-## ☁️ Deploy on Render
-
-Deploy the backend and frontend as separate Render services.
-
-### Backend Web Service
-
-- **Root directory:** `backend`
-- **Build command:** `npm install`
-- **Start command:** `npm start`
-- Add the backend credentials from [`backend/.env.example`](backend/.env.example) in the service's Environment settings. Render supplies `PORT` automatically.
-
-### Frontend Static Site
-
-- **Root directory:** `frontend`
-- **Build command:** `npm install && npm run build`
-- **Publish directory:** `build`
-- **Environment variable:** `REACT_APP_API_URL` set to the backend service's public URL, such as `https://your-backend.onrender.com`
-
-The frontend setting is embedded during the build and is public, so never put secrets in it. The example is in [`frontend/.env.example`](frontend/.env.example). After adding or changing this value in Render, trigger a new frontend deploy.
-
-For React Router page refreshes, add a Static Site rewrite from `/*` to `/index.html` in Render's Redirects/Rewrites settings.
+### 3️⃣ Run Servers Start
+Run this single command at the root to bind the Backend (Port 5000) and Frontend (Port 3000) natively:
+```bash
+npm run dev
+```
