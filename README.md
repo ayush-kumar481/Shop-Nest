@@ -36,3 +36,11 @@ npm run seed
 ```
 
 This creates sample catalog items and demo records.
+
+## Deploying to Render
+
+Deploy the backend as a **Web Service** with `backend` as its root directory, `npm install` as the build command, and `npm start` as the start command. Add the backend variables from `backend/.env.example` in the service's Environment settings. Render provides `PORT` automatically.
+
+Deploy the frontend as a **Static Site** with `frontend` as its root directory, `npm install && npm run build` as the build command, and `build` as the publish directory. Set `REACT_APP_API_URL` to the backend service's public URL, for example `https://shopnest-api.onrender.com`. This value is embedded during the frontend build and is public, so do not put secrets in it.
+
+Because the frontend uses React Router, add a Static Site rewrite from `/*` to `/index.html` in Render's Redirects/Rewrites settings.
